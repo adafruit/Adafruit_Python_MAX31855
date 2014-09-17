@@ -26,16 +26,33 @@
 
 import time
 
+import Adafruit_GPIO.SPI as SPI
 import Adafruit_MAX31855.MAX31855 as MAX31855
 
+# Uncomment one of the blocks of code below to configure your Pi or BBB to use
+# software or hardware SPI.
 
 # Raspberry Pi software SPI configuration.
 CLK = 25
 CS  = 24
 DO  = 18
-
-# Initialize the sensor with software SPI.
 sensor = MAX31855.MAX31855(CLK, CS, DO)
+
+# Raspberry Pi hardware SPI configuration.
+#SPI_PORT   = 0
+#SPI_DEVICE = 0
+#sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=5000000))
+
+# BeagleBone Black software SPI configuration.
+#CLK = 'P9_12'
+#CS  = 'P9_15'
+#DO  = 'P9_23'
+#sensor = MAX31855.MAX31855(CLK, CS, DO)
+
+# BeagleBone Black hardware SPI configuration.
+#SPI_PORT   = 1
+#SPI_DEVICE = 0
+#sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=5000000))
 
 # Loop printing measurements every second.
 print 'Press Ctrl-C to quit.'
