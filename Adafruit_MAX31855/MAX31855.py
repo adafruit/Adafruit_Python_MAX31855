@@ -60,17 +60,19 @@ class MAX31855(object):
 		"""
 		self._logger = logging.getLogger('Adafruit_MAX31855.MAX31855')
 		self._spi = None
-		# Default to platform GPIO if not provided.
-		self._gpio = gpio if gpio is not None else GPIO.get_platform_gpio()
 		# Handle hardware SPI
 		if spi is not None:
 			self._logger.debug('Using hardware SPI')
 			self._spi = spi
 		elif clk is not None and cs is not None and do is not None:
 			self._logger.debug('Using software SPI')
-			self._spi = SPI.BitBang(self._gpio, clk, None, do, cs)
+			# Default to platform GPIO if not provided.
+			if gpio is None:
+				gpio = GPIO.get_platform_gpio()
+			self._spi = SPI.BitBang(gpio, clk, None, do, cs)
 		else:
 			raise ValueError('Must specify either spi for for hardware SPI or clk, cs, and do for softwrare SPI!')
+		self._spi.set_clock_hz(5000000)
 		self._spi.set_mode(0)
 		self._spi.set_bit_order(SPI.MSBFIRST)
 

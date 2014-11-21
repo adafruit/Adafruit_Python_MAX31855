@@ -47,7 +47,7 @@ sensor = MAX31855.MAX31855(CLK, CS, DO)
 # Raspberry Pi hardware SPI configuration.
 #SPI_PORT   = 0
 #SPI_DEVICE = 0
-#sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=5000000))
+#sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
 # BeagleBone Black software SPI configuration.
 #CLK = 'P9_12'
@@ -58,7 +58,7 @@ sensor = MAX31855.MAX31855(CLK, CS, DO)
 # BeagleBone Black hardware SPI configuration.
 #SPI_PORT   = 1
 #SPI_DEVICE = 0
-#sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE, max_speed_hz=5000000))
+#sensor = MAX31855.MAX31855(spi=SPI.SpiDev(SPI_PORT, SPI_DEVICE))
 
 # Loop printing measurements every second.
 print 'Press Ctrl-C to quit.'
