@@ -49,70 +49,70 @@ MCP9808_REG_CONFIG_ALERTMODE   = 0x0001
 
 
 class MAX31855(object):
-	"""Class to represent an Adafruit MAX31855 thermocouple temperature
-	measurement board.
-	"""
+    """Class to represent an Adafruit MAX31855 thermocouple temperature
+    measurement board.
+    """
 
-	def __init__(self, clk=None, cs=None, do=None, spi=None, gpio=None):
-		"""Initialize MAX31855 device with software SPI on the specified CLK,
-		CS, and DO pins.  Alternatively can specify hardware SPI by sending an
-		Adafruit_GPIO.SPI.SpiDev device in the spi parameter.
-		"""
-		self._logger = logging.getLogger('Adafruit_MAX31855.MAX31855')
-		self._spi = None
-		# Handle hardware SPI
-		if spi is not None:
-			self._logger.debug('Using hardware SPI')
-			self._spi = spi
-		elif clk is not None and cs is not None and do is not None:
-			self._logger.debug('Using software SPI')
-			# Default to platform GPIO if not provided.
-			if gpio is None:
-				gpio = GPIO.get_platform_gpio()
-			self._spi = SPI.BitBang(gpio, clk, None, do, cs)
-		else:
-			raise ValueError('Must specify either spi for for hardware SPI or clk, cs, and do for softwrare SPI!')
-		self._spi.set_clock_hz(5000000)
-		self._spi.set_mode(0)
-		self._spi.set_bit_order(SPI.MSBFIRST)
+    def __init__(self, clk=None, cs=None, do=None, spi=None, gpio=None):
+        """Initialize MAX31855 device with software SPI on the specified CLK,
+        CS, and DO pins.  Alternatively can specify hardware SPI by sending an
+        Adafruit_GPIO.SPI.SpiDev device in the spi parameter.
+        """
+        self._logger = logging.getLogger('Adafruit_MAX31855.MAX31855')
+        self._spi = None
+        # Handle hardware SPI
+        if spi is not None:
+            self._logger.debug('Using hardware SPI')
+            self._spi = spi
+        elif clk is not None and cs is not None and do is not None:
+            self._logger.debug('Using software SPI')
+            # Default to platform GPIO if not provided.
+            if gpio is None:
+                gpio = GPIO.get_platform_gpio()
+            self._spi = SPI.BitBang(gpio, clk, None, do, cs)
+        else:
+            raise ValueError('Must specify either spi for for hardware SPI or clk, cs, and do for softwrare SPI!')
+        self._spi.set_clock_hz(5000000)
+        self._spi.set_mode(0)
+        self._spi.set_bit_order(SPI.MSBFIRST)
 
-	def readInternalC(self):
-		"""Return internal temperature value in degrees celsius."""
-		v = self._read32()
-		# Ignore bottom 4 bits of thermocouple data.
-		v >>= 4
-		# Grab bottom 11 bits as internal temperature data.
-		internal = v & 0x7FF
-		if v & 0x800:
-			# Negative value, take 2's compliment. Compute this with subtraction
-			# because python is a little odd about handling signed/unsigned.
-			internal -= 4096
-		# Scale by 0.0625 degrees C per bit and return value.
-		return internal * 0.0625
+    def readInternalC(self):
+        """Return internal temperature value in degrees celsius."""
+        v = self._read32()
+        # Ignore bottom 4 bits of thermocouple data.
+        v >>= 4
+        # Grab bottom 11 bits as internal temperature data.
+        internal = v & 0x7FF
+        if v & 0x800:
+            # Negative value, take 2's compliment. Compute this with subtraction
+            # because python is a little odd about handling signed/unsigned.
+            internal -= 4096
+        # Scale by 0.0625 degrees C per bit and return value.
+        return internal * 0.0625
 
-	def readTempC(self):
-		"""Return the thermocouple temperature value in degrees celsius."""
-		v = self._read32()
-		# Check for error reading value.
-		if v & 0x7:
-			return float('NaN')
-		# Check if signed bit is set.
-		if v & 0x80000000:
-			# Negative value, take 2's compliment. Compute this with subtraction
-			# because python is a little odd about handling signed/unsigned.
-			v >>= 18
-			v -= 16384
-		else:
-			# Positive value, just shift the bits to get the value.
-			v >>= 18
-		# Scale by 0.25 degrees C per bit and return value.
-		return v * 0.25
+    def readTempC(self):
+        """Return the thermocouple temperature value in degrees celsius."""
+        v = self._read32()
+        # Check for error reading value.
+        if v & 0x7:
+            return float('NaN')
+        # Check if signed bit is set.
+        if v & 0x80000000:
+            # Negative value, take 2's compliment. Compute this with subtraction
+            # because python is a little odd about handling signed/unsigned.
+            v >>= 18
+            v -= 16384
+        else:
+            # Positive value, just shift the bits to get the value.
+            v >>= 18
+        # Scale by 0.25 degrees C per bit and return value.
+        return v * 0.25
 
-	def _read32(self):
-		# Read 32 bits from the SPI bus.
-		raw = self._spi.read(4)
-		if raw is None or len(raw) != 4:
-			raise RuntimeError('Did not read expected number of bytes from device!')
-		value = raw[0] << 24 | raw[1] << 16 | raw[2] << 8 | raw[3]
-		self._logger.debug('Raw value: 0x{0:08X}'.format(value & 0xFFFFFFFF))
-		return value
+    def _read32(self):
+        # Read 32 bits from the SPI bus.
+        raw = self._spi.read(4)
+        if raw is None or len(raw) != 4:
+            raise RuntimeError('Did not read expected number of bytes from device!')
+        value = raw[0] << 24 | raw[1] << 16 | raw[2] << 8 | raw[3]
+        self._logger.debug('Raw value: 0x{0:08X}'.format(value & 0xFFFFFFFF))
+        return value
