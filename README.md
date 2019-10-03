@@ -1,3 +1,12 @@
+DEPRECATED LIBRARY Adafruit Python BMP
+======================================
+
+This library has been deprecated! We are leaving this up for historical and research purposes but archiving the repository.
+
+We are now only supporting the use of our CircuitPython libraries for use with Python.
+
+Check out this guide for info on using this sensor with the CircuitPython library: https://learn.adafruit.com/thermocouple/python-circuitpython
+
 Adafruit Python MAX31855
 ========================
 
