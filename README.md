@@ -1,4 +1,4 @@
-DEPRECATED LIBRARY Adafruit Python BMP
+DEPRECATED LIBRARY Adafruit Python MAX31855
 ======================================
 
 This library has been deprecated! We are leaving this up for historical and research purposes but archiving the repository.
@@ -8,7 +8,7 @@ We are now only supporting the use of our CircuitPython libraries for use with P
 Check out this guide for info on using this sensor with the CircuitPython library: https://learn.adafruit.com/thermocouple/python-circuitpython
 
 Adafruit Python MAX31855
-========================
+------------------------
 
 Python library for accessing the MAX31855 thermocouple temperature sensor on a Raspberry Pi or Beaglebone Black.
 
